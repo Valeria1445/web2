@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>лабораторная работа №2</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Лабораторная работа №2</h1>
+        
+    </header>
+
+    
+    <section class="task">
+        <h2>Подготовка к выполнению работы</h2>
+
+        <div class="step">
+            <h3>Локальные файлы</h3>
+            <div class="desc">В папке <code>web2</code> находятся необходимые файлы: <code>file.tar.gz</code>, <code>image.png</code>, <code>index.php</code>, скриншоты и др.</div>
+            <div class="screenshot"><img src="0.1.png" alt="Содержимое папки"><div class="caption">Скриншот 0.1: Локальные файлы</div></div>
+        </div>
+
+        <div class="step">
+            <h3>Инициализация Git и отправка на GitHub</h3>
+            <div class="command">
+                <pre>git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Valeria1445/web2.git
+git push -u origin main</pre>
+            </div>
+            <div class="desc">Репозиторий создан, файлы добавлены и отправлены на GitHub.</div>
+            <div class="screenshot"><img src="0.2.png" alt="Git push"><div class="caption">Скриншот 0.2: Отправка на GitHub</div></div>
+        </div>
+
+        <div class="step">
+            <h3>Клонирование репозитория на сервер</h3>
+            <div class="command">
+                <pre>git clone git@github.com:Valeria1445/web2.git
+mkdir -p ~/www/w2
+cp -r ~/web2/* ~/www/w2/</pre>
+            </div>
+            <div class="desc">Репозиторий склонирован, файлы скопированы в веб-доступный каталог <code>~/www/w2</code>.</div>
+            <div class="screenshot"><img src="0.3.png" alt="Клонирование и копирование"><div class="caption">Скриншот 0.3: Клонирование и cp</div></div>
+        </div>
+
+        <div class="step">
+            <h3>Подготовка HTTP-запросов</h3>
+            <div class="desc">Все запросы заранее набраны в текстовом редакторе для удобного копирования в PuTTY.</div>
+            <div class="screenshot"><img src="0.4.png" alt="Тексты запросов"><div class="caption">Скриншот 0.4: Запросы в блокноте</div></div>
+        </div>
+
+        <div class="step">
+            <h3>Настройка PuTTY</h3>
+            <div class="desc">Для отправки запросов используется PuTTY в режиме <strong>Raw</strong> (прямое TCP-соединение). Адрес: <code>u82358.kubsu-dev.ru</code>, порт 80.</div>
+            <div class="screenshot"><img src="0.5.png" alt="Настройки PuTTY"><div class="caption">Скриншот 0.5: Конфигурация PuTTY (Raw)</div></div>
+        </div>
+    </section>
+
+   
+    <section class="task">
+        <h2>1. Получить главную страницу методом GET в HTTP/1.0</h2>
+        <div class="step">
+            <div class="command"><pre>GET / HTTP/1.0</pre></div>
+            <div class="desc">
+                <p>Запрос корневой директории. Сервер возвращает стандартную страницу Apache (так как в корне нет индексного файла).</p>
+                <p><strong>Результат (скриншот 1.png):</strong></p>
+                <ul>
+                    <li>Статус: <code>HTTP/1.1 200 OK</code></li>
+                    <li>Заголовки: <code>Server: Apache/2.4.58 (Ubuntu)</code>, <code>Content-Length: 10671</code>, <code>Content-Type: text/html</code></li>
+                    <li>Тело: стандартная страница-заглушка Apache2 Ubuntu Default Page.</li>
+                </ul>
+            </div>
+            <div class="screenshot"><img src="1.png" alt="GET / HTTP/1.0"><div class="caption">Скриншот 1: GET / HTTP/1.0</div></div>
+        </div>
+    </section>
+
+    
+    <section class="task">
+        <h2>2. Получить внутреннюю страницу методом GET в HTTP/1.1</h2>
+        <div class="step">
+            <div class="command"><pre>GET /w2/index.php HTTP/1.1
+Host: u82358.kubsu-dev.ru
+Connection: close</pre></div>
+            <div class="desc">
+                <p>Запрос <code>index.php</code> из каталога <code>/w2/</code>. Скрипт возвращает статус 404 (задано в коде преподавателем), но выводит данные.</p>
+                <p><strong>Результат (скриншот 2.png):</strong></p>
+                <ul>
+                    <li>Статус: <code>HTTP/1.1 404 Not Found</code></li>
+                    <li>Заголовок <code>Content-Type: text/html; charset=UTF-8</code></li>
+                    <li>Тело: <code>Array ( ) Привет, мир!</code></li>
+                </ul>
+                <p><em>Статус 404 не мешает анализу содержимого.</em></p>
+            </div>
+            <div class="screenshot"><img src="2.png" alt="GET /w2/index.php"><div class="caption">Скриншот 2: GET /w2/index.php</div></div>
+        </div>
+    </section>
+
+  
+    <section class="task">
+        <h2>3. Определить размер файла file.tar.gz (HEAD)</h2>
+        <div class="step">
+            <div class="command"><pre>HEAD /w2/file.tar.gz HTTP/1.1
+Host: u82358.kubsu-dev.ru
+Connection: close</pre></div>
+            <div class="desc">
+                <p>Метод <code>HEAD</code> возвращает только заголовки. Позволяет узнать размер из поля <code>Content-Length</code>.</p>
+                <p><strong>Результат (скриншот 3.png):</strong></p>
+                <ul>
+                    <li>Статус: <code>HTTP/1.1 200 OK</code></li>
+                    <li>Заголовок <code>Content-Length: 11335</code> байт</li>
+                    <li>Тип файла: <code>application/x-gzip</code></li>
+                </ul>
+            </div>
+            <div class="screenshot"><img src="3.png" alt="HEAD /w2/file.tar.gz"><div class="caption">Скриншот 3: HEAD /w2/file.tar.gz</div></div>
+        </div>
+    </section>
+
+    
+    <section class="task">
+        <h2>4. Определить медиатип ресурса /image.png</h2>
+        <div class="step">
+            <div class="command"><pre>HEAD /w2/image.png HTTP/1.1
+Host: u82358.kubsu-dev.ru
+Connection: close</pre></div>
+            <div class="desc">
+                <p>Аналогично пункту 3, определяем MIME-тип изображения.</p>
+                <p><strong>Результат (скриншот 4.png):</strong></p>
+                <ul>
+                    <li>Статус: <code>HTTP/1.1 200 OK</code></li>
+                    <li>Заголовок <code>Content-Type: image/png</code></li>
+                    <li>Размер: <code>Content-Length: 10506</code> байт</li>
+                </ul>
+            </div>
+            <div class="screenshot"><img src="4.png" alt="HEAD /w2/image.png"><div class="caption">Скриншот 4: HEAD /w2/image.png</div></div>
+        </div>
+    </section>
+
+  
+    <section class="task">
+        <h2>5. Отправить комментарий методом POST</h2>
+        <div class="step">
+            <div class="command"><pre>POST /w2/index.php HTTP/1.1
+Host: u82358.kubsu-dev.ru
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 14
+Connection: close
+
+comment=Hello</pre></div>
+            <div class="desc">
+                <p>Отправка POST-данных (имитация формы). Скрипт возвращает статус 404, но выводит массив <code>$_POST</code>.</p>
+                <p><strong>Результат (скриншот 5.png):</strong></p>
+                <ul>
+                    <li>Статус: <code>HTTP/1.1 404 Not Found</code></li>
+                    <li>Тело: <code>Array ( [comment] => Hello ) Привет, мир!</code></li>
+                </ul>
+            </div>
+            <div class="screenshot"><img src="5.png" alt="POST /w2/index.php"><div class="caption">Скриншот 5: POST /w2/index.php</div></div>
+        </div>
+    </section>
+
+    
+    <section class="task">
+        <h2>6. Получить первые 100 байт файла /file.tar.gz</h2>
+        <div class="step">
+            <div class="command"><pre>GET /w2/file.tar.gz HTTP/1.1
+Host: u82358.kubsu-dev.ru
+Range: bytes=0-99
+Connection: close</pre></div>
+            <div class="desc">
+                <p>Заголовок <code>Range</code> запрашивает только указанный диапазон байт (первые 100).</p>
+                <p><strong>Результат (скриншот 6.png):</strong></p>
+                <ul>
+                    <li>Статус: <code>HTTP/1.1 206 Partial Content</code></li>
+                    <li>Заголовок <code>Content-Range: bytes 0-99/11335</code></li>
+                    <li><code>Content-Length: 100</code></li>
+                    <li>Тело содержит бинарные данные (первые 100 байт архива)</li>
+                </ul>
+            </div>
+            <div class="screenshot"><img src="6.png" alt="GET с Range"><div class="caption">Скриншот 6: GET /w2/file.tar.gz с Range</div></div>
+        </div>
+    </section>
+
+   
+    <section class="task">
+        <h2>7. Определить кодировку ресурса /index.php</h2>
+        <div class="step">
+            <div class="command"><pre>HEAD /w2/index.php HTTP/1.1
+Host: u82358.kubsu-dev.ru
+Connection: close</pre></div>
+            <div class="desc">
+                <p>Запрос HEAD для получения заголовков. Кодировка указана в поле <code>Content-Type</code>.</p>
+                <p><strong>Результат (скриншот 7.png):</strong></p>
+                <ul>
+                    <li>Статус: <code>HTTP/1.1 404 Not Found</code></li>
+                    <li>Заголовок <code>Content-Type: text/html; charset=UTF-8</code> – кодировка <strong>UTF-8</strong></li>
+                </ul>
+            </div>
+            <div class="screenshot"><img src="7.png" alt="HEAD /w2/index.php"><div class="caption">Скриншот 7: HEAD /w2/index.php</div></div>
+        </div>
+    </section>
+
+    
+    <section class="task">
+        <h2>Обновление репозитория и сервера после выполнения запросов</h2>
+
+        <div class="step">
+            <h3>Добавление скриншотов в Git (локально)</h3>
+            <div class="desc">Скриншоты HTTP-запросов (1–7, 0.2–0.5) добавлены в локальный репозиторий, закоммичены и отправлены на GitHub.</div>
+            <div class="screenshot"><img src="8.png" alt="git add/commit/push"><div class="caption">Скриншот 8: Новые файлы в Git</div></div>
+        </div>
+
+        <div class="step">
+            <h3>Обновление файлов на сервере</h3>
+            <div class="desc">На сервере выполнен <code>git pull</code> и повторное копирование в <code>~/www/w2</code>.</div>
+            <div class="screenshot"><img src="9.png" alt="git pull на сервере"><div class="caption">Скриншот 9: Обновление на сервере</div></div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Все этапы работы задокументированы. Отчёт соответствует выполненным скриншотам.</p>
+    </footer>
+</div>
+</body>
+</html>
